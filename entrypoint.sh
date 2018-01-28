@@ -1,5 +1,4 @@
 #!/usr/bin/dumb-init /bin/bash
-set -e
 
 uid=${FLUENT_UID:-1000}
 
@@ -17,6 +16,8 @@ export HOME=/home/fluent
 chown -R fluent /home/fluent
 chown -R fluent /fluentd
 
+set -e
+# Seting dynamic variable
 if [[ -z ${FLUENT_ELASTICSEARCH_USER} ]] ; then
     sed -i  '/FLUENT_ELASTICSEARCH_USER/d' /fluentd/etc/${FLUENTD_CONF}
 else
