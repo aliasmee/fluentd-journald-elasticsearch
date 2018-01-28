@@ -1,4 +1,4 @@
-# v1.0-debian-onbuild
+# or v1.0-debian-onbuild
 FROM fluent/fluentd:v1.1.0-debian
 
 # below RUN includes plugin as examples elasticsearch is not required
@@ -21,7 +21,6 @@ RUN buildDeps="sudo make gcc g++ libc-dev ruby-dev" \
  && rm -rf /var/lib/apt/lists/* \
            /home/fluent/.gem/ruby/2.3.0/cache/*.gem \
  && mkdir -p /fluentd/etc
-
+COPY fluent.conf /fluentd/etc/
 COPY entrypoint.sh /bin/entrypoint.sh
 RUN chmod +x /bin/entrypoint.sh
-COPY fluent.conf /fluentd/etc/
