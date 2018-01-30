@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: fluentd
+  namespace: devops
+  labels:
+    k8s-app: fluentd-logging
+    version: v1
+    io.daocloud.dce.app: EFK-Cluste
+    kubernetes.io/cluster-service: "true"
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: fluentd-logging
+        io.daocloud.dce.app: EFK-Cluste
+        version: v1
+        kubernetes.io/cluster-service: "true"
+    spec:
+      containers:
+      - name: fluentd
+        image: hanyifeng/fluentd-journald-elasticsearch:latest
+        env:
+          - name: FLUENT_ELASTICSEARCH_HOST
+            value: "elasticsearch"
+          - name: FLUENT_ELASTICSEARCH_PORT
+            value: "9200"
+        resources:
+          limits:
+            memory: 200Mi
+            cpu: "1"
+          requests:
+            cpu: 200m
+            memory: 200Mi
+        volumeMounts:
+        - name: journallog
+          mountPath: /run/log/journal
+          readOnly: true
+      volumes:
+      - name: journallog
+        hostPath:
+          path: /run/log/journal
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
